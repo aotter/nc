@@ -1,3 +1,20 @@
+// nc: 0.1.2
+var __defProp = Object.defineProperty;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
 function makeMap(str, expectsLowerCase) {
   const map = /* @__PURE__ */ Object.create(null);
   const list = str.split(",");
@@ -292,10 +309,15 @@ class ReactiveEffect {
       activeEffect = this.parent;
       shouldTrack = lastShouldTrack;
       this.parent = void 0;
+      if (this.deferStop) {
+        this.stop();
+      }
     }
   }
   stop() {
-    if (this.active) {
+    if (activeEffect === this) {
+      this.deferStop = true;
+    } else if (this.active) {
       cleanupEffect(this);
       if (this.onStop) {
         this.onStop();
@@ -425,7 +447,7 @@ function triggerEffects(dep, debuggerEventExtraInfo) {
   }
 }
 const isNonTrackableKeys = /* @__PURE__ */ makeMap(`__proto__,__v_isRef,__isVue`);
-const builtInSymbols = new Set(Object.getOwnPropertyNames(Symbol).map((key) => Symbol[key]).filter(isSymbol));
+const builtInSymbols = new Set(/* @__PURE__ */ Object.getOwnPropertyNames(Symbol).map((key) => Symbol[key]).filter(isSymbol));
 const get = /* @__PURE__ */ createGetter();
 const shallowGet = /* @__PURE__ */ createGetter(false, true);
 const readonlyGet = /* @__PURE__ */ createGetter(true);
@@ -975,7 +997,6 @@ function computed$1(getterOrOptions, debugOptions, isSSR = false) {
   const cRef = new ComputedRefImpl(getter, setter, onlyGetter || !setter, isSSR);
   return cRef;
 }
-Promise.resolve();
 function callWithErrorHandling(fn, instance, type, args) {
   let res;
   try {
@@ -1041,7 +1062,7 @@ let preFlushIndex = 0;
 const pendingPostFlushCbs = [];
 let activePostFlushCbs = null;
 let postFlushIndex = 0;
-const resolvedPromise = Promise.resolve();
+const resolvedPromise = /* @__PURE__ */ Promise.resolve();
 let currentFlushPromise = null;
 let currentPreFlushParentJob = null;
 function nextTick(fn) {
@@ -1155,6 +1176,8 @@ function flushJobs(seen) {
   }
 }
 function emit$1(instance, event, ...rawArgs) {
+  if (instance.isUnmounted)
+    return;
   const props = instance.vnode.props || EMPTY_OBJ;
   let args = rawArgs;
   const isModelListener2 = event.startsWith("update:");
@@ -1664,9 +1687,17 @@ const BaseTransitionImpl = {
       if (!children || !children.length) {
         return;
       }
+      let child = children[0];
+      if (children.length > 1) {
+        for (const c of children) {
+          if (c.type !== Comment) {
+            child = c;
+            break;
+          }
+        }
+      }
       const rawProps = toRaw(props);
       const { mode } = rawProps;
-      const child = children[0];
       if (state.isLeaving) {
         return emptyPlaceholder(child);
       }
@@ -3577,7 +3608,9 @@ function baseCreateRenderer(options, createHydrationFns) {
   const remove2 = (vnode) => {
     const { type, el, anchor, transition } = vnode;
     if (type === Fragment) {
-      removeFragment(el, anchor);
+      {
+        removeFragment(el, anchor);
+      }
       return;
     }
     if (type === Static) {
@@ -4055,7 +4088,7 @@ const getPublicInstance = (i) => {
     return getExposeProxy(i) || i.proxy;
   return getPublicInstance(i.parent);
 };
-const publicPropertiesMap = extend(/* @__PURE__ */ Object.create(null), {
+const publicPropertiesMap = /* @__PURE__ */ extend(/* @__PURE__ */ Object.create(null), {
   $: (i) => i,
   $el: (i) => i.vnode.el,
   $data: (i) => i.data,
@@ -4149,7 +4182,7 @@ const PublicInstanceProxyHandlers = {
   },
   defineProperty(target, key, descriptor) {
     if (descriptor.get != null) {
-      target.$.accessCache[key] = 0;
+      target._.accessCache[key] = 0;
     } else if (hasOwn(descriptor, "value")) {
       this.set(target, key, descriptor.value, null);
     }
@@ -4368,10 +4401,10 @@ function isClassComponent(value) {
 const computed = (getterOrOptions, debugOptions) => {
   return computed$1(getterOrOptions, debugOptions, isInSSRComponentSetup);
 };
-const version = "3.2.32";
+const version = "3.2.33";
 const svgNS = "http://www.w3.org/2000/svg";
 const doc = typeof document !== "undefined" ? document : null;
-const templateContainer = doc && doc.createElement("template");
+const templateContainer = doc && /* @__PURE__ */ doc.createElement("template");
 const nodeOps = {
   insert: (child, parent, anchor) => {
     parent.insertBefore(child, anchor || null);
@@ -4482,6 +4515,8 @@ function setStyle(style, name, val) {
   if (isArray(val)) {
     val.forEach((v) => setStyle(style, name, v));
   } else {
+    if (val == null)
+      val = "";
     if (name.startsWith("--")) {
       style.setProperty(name, val);
     } else {
@@ -4550,40 +4585,39 @@ function patchDOMProp(el, key, value, prevChildren, parentComponent, parentSuspe
     }
     return;
   }
+  let needRemove = false;
   if (value === "" || value == null) {
     const type = typeof el[key];
     if (type === "boolean") {
-      el[key] = includeBooleanAttr(value);
-      return;
+      value = includeBooleanAttr(value);
     } else if (value == null && type === "string") {
-      el[key] = "";
-      el.removeAttribute(key);
-      return;
+      value = "";
+      needRemove = true;
     } else if (type === "number") {
-      try {
-        el[key] = 0;
-      } catch (_a) {
-      }
-      el.removeAttribute(key);
-      return;
+      value = 0;
+      needRemove = true;
     }
   }
   try {
     el[key] = value;
   } catch (e) {
   }
+  needRemove && el.removeAttribute(key);
 }
-let _getNow = Date.now;
-let skipTimestampCheck = false;
-if (typeof window !== "undefined") {
-  if (_getNow() > document.createEvent("Event").timeStamp) {
-    _getNow = () => performance.now();
+const [_getNow, skipTimestampCheck] = /* @__PURE__ */ (() => {
+  let _getNow2 = Date.now;
+  let skipTimestampCheck2 = false;
+  if (typeof window !== "undefined") {
+    if (Date.now() > document.createEvent("Event").timeStamp) {
+      _getNow2 = () => performance.now();
+    }
+    const ffMatch = navigator.userAgent.match(/firefox\/(\d+)/i);
+    skipTimestampCheck2 = !!(ffMatch && Number(ffMatch[1]) <= 53);
   }
-  const ffMatch = navigator.userAgent.match(/firefox\/(\d+)/i);
-  skipTimestampCheck = !!(ffMatch && Number(ffMatch[1]) <= 53);
-}
+  return [_getNow2, skipTimestampCheck2];
+})();
 let cachedNow = 0;
-const p = Promise.resolve();
+const p = /* @__PURE__ */ Promise.resolve();
 const reset = () => {
   cachedNow = 0;
 };
@@ -4677,7 +4711,7 @@ function shouldSetAsProp(el, key, value, isSVG) {
     }
     return false;
   }
-  if (key === "spellcheck" || key === "draggable") {
+  if (key === "spellcheck" || key === "draggable" || key === "translate") {
     return false;
   }
   if (key === "form") {
@@ -5269,7 +5303,7 @@ const vShow = {
 function setDisplay(el, value) {
   el.style.display = value ? el._vod : "none";
 }
-const rendererOptions = extend({ patchProp }, nodeOps);
+const rendererOptions = /* @__PURE__ */ extend({ patchProp }, nodeOps);
 let renderer;
 function ensureRenderer() {
   return renderer || (renderer = createRenderer(rendererOptions));
@@ -5851,12 +5885,9 @@ const registerComponent = () => {
   const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
   if (hasDefined)
     return;
-  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./c588fb7f.js"), "/src/components/view/layout/Default.ce.vue": () => import("./cf1e03f4.js"), "/src/components/view/layout/Template.ce.vue": () => import("./0fad9368.js"), "/src/components/view/type/Banner.ce.vue": () => import("./6285ada6.js"), "/src/components/view/type/Chest.ce.vue": () => import("./c497c7d7.js"), "/src/components/view/type/Vast.ce.vue": () => import("./0d8757eb.js") };
-  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./65faee7e.js") };
-  const components = {
-    ...viewComponents,
-    ...sharedComponents
-  };
+  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./c9bc4f27.js"), "/src/components/view/layout/Default.ce.vue": () => import("./612bfab8.js"), "/src/components/view/layout/Template.ce.vue": () => import("./ff59842c.js"), "/src/components/view/type/Banner.ce.vue": () => import("./cdf805ce.js"), "/src/components/view/type/Chest.ce.vue": () => import("./f145b142.js"), "/src/components/view/type/Vast.ce.vue": () => import("./a8c24aa7.js") };
+  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./a77558a6.js") };
+  const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
   Object.keys(components).forEach((key) => {
     var _a;
     const name = (_a = key.split("/").pop()) == null ? void 0 : _a.split(".")[0].toLowerCase();
@@ -5881,4 +5912,4 @@ const initialize = (data) => {
     console.warn("nc: data is not a valid json");
   }
 };
-export { toDisplayString as A, registerComponent as B, CLICK as C, initialize as D, Fragment as F, INTERSECTIONS as I, LINK as L, NC_ELEMENT_PREFIX as N, TransitionGroup as T, createElementBlock as a, createBaseVNode as b, computed as c, defineComponent as d, createBlock as e, unref as f, rippleEcho as g, createVNode as h, normalizeClass as i, NC_PICTURE_ELEMENT as j, ref as k, onMounted as l, onBeforeUnmount as m, normalizeStyle as n, openBlock as o, pondEcho as p, renderList as q, resolveDynamicComponent as r, events as s, reactive as t, useCssVars as u, viewEcho as v, withCtx as w, withDirectives as x, vShow as y, createTextVNode as z };
+export { toDisplayString as A, registerComponent as B, CLICK as C, initialize as D, Fragment as F, INTERSECTIONS as I, LINK as L, NC_ELEMENT_PREFIX as N, TransitionGroup as T, createElementBlock as a, createBaseVNode as b, computed as c, defineComponent as d, createBlock as e, useCssVars as f, rippleEcho as g, createVNode as h, normalizeClass as i, NC_PICTURE_ELEMENT as j, ref as k, onMounted as l, onBeforeUnmount as m, normalizeStyle as n, openBlock as o, pondEcho as p, renderList as q, resolveDynamicComponent as r, events as s, reactive as t, unref as u, viewEcho as v, withCtx as w, withDirectives as x, vShow as y, createTextVNode as z };

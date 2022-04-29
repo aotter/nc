@@ -1,6 +1,6 @@
 // nc: 0.1.3
-import { o as openBlock, a as createElementBlock, b as createBaseVNode, d as defineComponent, c as computed, h as createVNode, u as unref, i as normalizeClass, n as normalizeStyle, e as createBlock, r as resolveDynamicComponent, N as NC_ELEMENT_PREFIX, C as CLICK, L as LINK } from "./ae1324bf.js";
-import { u as useEcho } from "./19fb4cb0.js";
+import { a as openBlock, b as createElementBlock, e as createBaseVNode, d as defineComponent, c as computed, z as createVNode, u as unref, A as normalizeClass, h as normalizeStyle, f as createBlock, g as resolveDynamicComponent, N as NC_ELEMENT_PREFIX, C as CLICK, L as LINK } from "./e605d59c.js";
+import { u as useEcho } from "./b10f2c9a.js";
 import { _ as _export_sfc } from "./841cd136.js";
 const ASEAL_URL = "https://aseal.in/";
 const VAST = "vast";
@@ -27,12 +27,12 @@ function render(_ctx, _cache) {
   return openBlock(), createElementBlock("svg", _hoisted_1, _hoisted_3);
 }
 var Logo = { render };
-var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.default{position:relative;width:100%;height:100%}.default__logo-button{position:absolute;z-index:9999}.default__logo-button--top-right{top:0;right:0}.default__logo-button--top-left{top:0;left:0}\n';
+var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{color:initial;background-color:initial;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.default{position:relative;width:100%;height:100%}.default__logo-button{z-index:100;position:absolute}.default__logo-button--top-right{top:0;right:0}.default__logo-button--top-left{top:0;left:0}\n';
 const _sfc_main = /* @__PURE__ */ defineComponent({
   props: {
     ncId: {
-      type: String,
-      required: true
+      required: true,
+      type: String
     }
   },
   setup(__props) {
@@ -40,9 +40,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const { view, ripple, styles } = useEcho(props.ncId);
     const logoPositionClass = computed(() => view.value.type === VAST ? "default__logo-button--top-left" : "default__logo-button--top-right");
     const clickPayload = {
+      tracks: [],
       type: LINK,
-      url: ASEAL_URL,
-      tracks: []
+      url: ASEAL_URL
     };
     const handleClickLogo = () => {
       ripple.send(CLICK, clickPayload);

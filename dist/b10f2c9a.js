@@ -18,7 +18,7 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-import { p as pondEcho, g as rippleEcho, c as computed, v as viewEcho } from "./ae1324bf.js";
+import { p as pondEcho, j as rippleEcho, c as computed, v as viewEcho } from "./e605d59c.js";
 const useEcho = (id) => {
   const pond = pondEcho[id];
   const ripple = rippleEcho[id];
@@ -32,10 +32,10 @@ const useEcho = (id) => {
   }, {}));
   return {
     pond,
-    ripple,
-    view,
     property,
-    styles
+    ripple,
+    styles,
+    view
   };
 };
 export { useEcho as u };

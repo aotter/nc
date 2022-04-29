@@ -15,6 +15,17 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
+const NC = "nc";
+const NC_PREFIX = `${NC}-`;
+const NC_DEBUG_PARAM = `${NC_PREFIX}-debug`;
+const NC_ELEMENT = NC;
+const NC_ELEMENT_PREFIX = `${NC_ELEMENT}-`;
+const NC_ELEMENT_ATTR_ID = `${NC_ELEMENT_PREFIX}id`;
+const NC_VIEW_ELEMENT = `${NC_ELEMENT}-view`;
+const NC_PICTURE_ELEMENT = `${NC_ELEMENT_PREFIX}picture`;
+const NCR = "__NCR__";
+const NCV = "__NCV__";
+const NCP = "__NCP__";
 function makeMap(str, expectsLowerCase) {
   const map = /* @__PURE__ */ Object.create(null);
   const list = str.split(",");
@@ -1460,6 +1471,9 @@ function inject(key, defaultValue, treatDefaultAsFactory = false) {
       ;
   }
 }
+function watchEffect(effect, options) {
+  return doWatch(effect, null, options);
+}
 function watchPostEffect(effect, options) {
   return doWatch(effect, null, { flush: "post" });
 }
@@ -2261,7 +2275,7 @@ function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP, 
   }
 }
 function callHook$1(hook, instance, type) {
-  callWithAsyncErrorHandling(isArray(hook) ? hook.map((h) => h.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
+  callWithAsyncErrorHandling(isArray(hook) ? hook.map((h2) => h2.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
 }
 function createWatcher(raw, ctx, publicThis, key) {
   const getter = key.includes(".") ? createPathGetter(publicThis, key) : () => publicThis[key];
@@ -3960,6 +3974,9 @@ function cloneVNode(vnode, extraProps, mergeRef = false) {
 function createTextVNode(text = " ", flag = 0) {
   return createVNode(Text, null, text, flag);
 }
+function createCommentVNode(text = "", asBlock = false) {
+  return asBlock ? (openBlock(), createBlock(Comment, null, text)) : createVNode(Comment, null, text);
+}
 function normalizeVNode(child) {
   if (child == null || typeof child === "boolean") {
     return createVNode(Comment);
@@ -4401,6 +4418,26 @@ function isClassComponent(value) {
 const computed = (getterOrOptions, debugOptions) => {
   return computed$1(getterOrOptions, debugOptions, isInSSRComponentSetup);
 };
+function h(type, propsOrChildren, children) {
+  const l = arguments.length;
+  if (l === 2) {
+    if (isObject(propsOrChildren) && !isArray(propsOrChildren)) {
+      if (isVNode(propsOrChildren)) {
+        return createVNode(type, null, [propsOrChildren]);
+      }
+      return createVNode(type, propsOrChildren);
+    } else {
+      return createVNode(type, null, propsOrChildren);
+    }
+  } else {
+    if (l > 3) {
+      children = Array.prototype.slice.call(arguments, 2);
+    } else if (l === 3 && isVNode(children)) {
+      children = [children];
+    }
+    return createVNode(type, propsOrChildren, children);
+  }
+}
 const version = "3.2.33";
 const svgNS = "http://www.w3.org/2000/svg";
 const doc = typeof document !== "undefined" ? document : null;
@@ -4956,13 +4993,13 @@ const DOMTransitionPropsValidators = {
 const TransitionPropsValidators = /* @__PURE__ */ extend({}, BaseTransition.props, DOMTransitionPropsValidators);
 const callHook = (hook, args = []) => {
   if (isArray(hook)) {
-    hook.forEach((h) => h(...args));
+    hook.forEach((h2) => h2(...args));
   } else if (hook) {
     hook(...args);
   }
 };
 const hasExplicitCallback = (hook) => {
-  return hook ? isArray(hook) ? hook.some((h) => h.length > 1) : hook.length > 1 : false;
+  return hook ? isArray(hook) ? hook.some((h2) => h2.length > 1) : hook.length > 1 : false;
 };
 function resolveTransitionProps(rawProps) {
   const baseProps = {};
@@ -5311,29 +5348,41 @@ function ensureRenderer() {
 const render = (...args) => {
   ensureRenderer().render(...args);
 };
+const windowCustomReactive = (key) => {
+  const state = reactive({});
+  switch (key) {
+    case NCV:
+      window[NCV] = state;
+      break;
+    case NCR:
+      window[NCR] = state;
+      break;
+    case NCP:
+      window[NCP] = state;
+      break;
+  }
+  return state;
+};
+const ERROR = "error";
 const INFO = "info";
 const LOG = "log";
 const WARN = "warn";
-const ERROR = "error";
 const ECHO = "echo";
+const POPUP$1 = "popup";
 const RIPPLE = "ripple";
 const VIEW = "view";
-const POPUP$1 = "popup";
 const PondColor = {
+  [ERROR]: "#ec4899",
   [INFO]: "#22d3ee",
   [LOG]: "#94a3b8",
-  [WARN]: "#fbbf24",
-  [ERROR]: "#ec4899"
+  [WARN]: "#fbbf24"
 };
 const PondScopeEmoji = {
   [ECHO]: "\u{1F4AC}",
+  [POPUP$1]: "\u{1F4A5}",
   [RIPPLE]: "\u{1F4A6}",
-  [VIEW]: "\u{1F440}",
-  [POPUP$1]: "\u{1F4A5}"
+  [VIEW]: "\u{1F4A1}"
 };
-const NC = "nc";
-const NC_PREFIX = `${NC}-`;
-const NC_DEBUG_PARAM = `${NC_PREFIX}-debug`;
 class PondInstance {
   constructor(id) {
     this._id = id;
@@ -5375,8 +5424,40 @@ class PondInstance {
 const initializePond = (id) => {
   return new PondInstance(id);
 };
+const generateThresholds = () => {
+  const thresholds = [];
+  for (let i = 0; i < 1.01; i += 0.01) {
+    thresholds.push(+i.toFixed(2));
+  }
+  return thresholds;
+};
+const IMAGE = "image";
+const sendImageTrack = (url) => {
+  const image = new Image();
+  image.onload = image.onerror = (arg) => arg;
+  image.src = url;
+};
+const sendTracks = (tracks) => {
+  if (!(tracks == null ? void 0 : tracks.length))
+    return;
+  tracks.forEach((track2) => {
+    const { url, method } = track2;
+    switch (method) {
+      case IMAGE:
+        sendImageTrack(url);
+        break;
+    }
+  });
+};
+const CLICK = "click";
+const INTERSECTIONS = "intersections";
+const POSITION = "position";
+const READY = "ready";
+const LINK = "link";
+const POPUP = "popup";
 const noop = () => {
 };
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 var events = { exports: {} };
 var R = typeof Reflect === "object" ? Reflect : null;
 var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply2(target, receiver, args) {
@@ -5738,130 +5819,126 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
     throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
   }
 }
-const generateThresholds = () => {
-  const thresholds = [];
-  for (let i = 0; i <= 1.01; i += 0.01) {
-    thresholds.push(+i.toFixed(2));
-  }
-  return thresholds;
-};
-const CLICK = "click";
-const INTERSECTIONS = "intersections";
-const LINK = "link";
-const POPUP = "popup";
-const NC_ELEMENT = NC;
-const NC_ELEMENT_PREFIX = `${NC_ELEMENT}-`;
-const NC_ELEMENT_ATTR_ID = `${NC_ELEMENT_PREFIX}id`;
-const NC_VIEW_ELEMENT = `${NC_ELEMENT}-view`;
-const NC_PICTURE_ELEMENT = `${NC_ELEMENT_PREFIX}picture`;
-const IMAGE = "image";
-const sendImageTrack = (url) => {
-  const image = new Image();
-  image.onload = image.onerror = (arg) => arg;
-  image.src = url;
-};
-const sendTracks = (tracks) => {
-  if (!(tracks == null ? void 0 : tracks.length))
-    return;
-  tracks.forEach((track2) => {
-    const { url, method } = track2;
-    switch (method) {
-      case IMAGE:
-        sendImageTrack(url);
-        break;
-    }
-  });
-};
 class WebRipple extends events.exports.EventEmitter {
   constructor(id) {
     super();
+    this._observers = [];
     this.id = id;
     this.element = document.querySelector(`[${NC_ELEMENT_ATTR_ID}="${id}"]`) || document.body;
   }
-  intersections(event, listener) {
+  listen_intersections(listener, options) {
     this.on(INTERSECTIONS, listener || noop);
-    const intersectionsEvent = event;
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: generateThresholds()
+    const {
+      events: events2 = [],
+      element = this.element,
+      root = null,
+      threshold = generateThresholds(),
+      rootMargin = "0px"
+    } = options != null ? options : {};
+    const intersectionOptions = {
+      root,
+      rootMargin,
+      threshold
     };
-    const timerMap = [];
-    const sentMap = new Array(intersectionsEvent == null ? void 0 : intersectionsEvent.length).fill(false);
-    const observer = new IntersectionObserver(([{ intersectionRatio }]) => {
-      this.emit(INTERSECTIONS, intersectionRatio);
-      if (!(intersectionsEvent == null ? void 0 : intersectionsEvent.length))
+    const eventStatusMap = {
+      send: new Array(events2 == null ? void 0 : events2.length).fill(false),
+      timer: []
+    };
+    const notEvent = !events2.length;
+    const observerCallback = ([
+      { isIntersecting, intersectionRatio }
+    ]) => {
+      this.emit(INTERSECTIONS, {
+        intersectionRatio,
+        isIntersecting
+      });
+      if (notEvent)
         return;
-      const isEverySent = sentMap.every((sent) => sent);
-      if (isEverySent) {
-        observer.disconnect();
+      const isEverySent = eventStatusMap.send.every((sent) => sent);
+      if (isEverySent)
         return;
-      }
-      intersectionsEvent == null ? void 0 : intersectionsEvent.forEach((event2, index) => {
-        const { setting, tracks } = event2;
+      events2.forEach((event, index) => {
+        const { setting, tracks } = event;
         const { ratio, remain } = setting;
-        if (sentMap[index])
+        if (eventStatusMap.send[index])
           return;
-        timerMap[index] && clearTimeout(timerMap[index]);
+        eventStatusMap.timer[index] && clearTimeout(eventStatusMap.timer[index]);
         if (intersectionRatio >= ratio) {
-          timerMap[index] = setTimeout(() => {
-            sentMap[index] = true;
+          eventStatusMap.timer[index] = setTimeout(() => {
+            eventStatusMap.send[index] = true;
             sendTracks(tracks);
+            this._observers[currentObserverIndex].disconnect();
           }, remain);
         }
       });
-    }, options);
-    observer.observe(this.element);
+    };
+    const observer = new IntersectionObserver(observerCallback, intersectionOptions);
+    const currentObserverIndex = this._observers.push(observer) - 1;
+    this._observers[currentObserverIndex].observe(element);
   }
-  click(event) {
+  listen_position(listener, options) {
+    const { element = this.element, root = window } = options != null ? options : {};
+    this.on(POSITION, listener);
+    let timeout;
+    root == null ? void 0 : root.addEventListener("scroll", () => {
+      timeout && window.cancelAnimationFrame(timeout);
+      timeout = window.requestAnimationFrame(() => {
+        const { top, height } = element.getBoundingClientRect();
+        const rootHeight = root === window ? root.innerHeight : root.offsetHeight;
+        const fraction = (top + height) / (rootHeight + height);
+        const inViewport = fraction >= 0 && fraction <= 1;
+        if (inViewport) {
+          const position = clamp(1 - fraction, 0, 1);
+          this.emit(POSITION, position);
+        }
+      });
+    }, { passive: true });
+  }
+  send_click(event) {
     this.emit(CLICK, event);
-    const clickEvent = event;
-    switch (clickEvent.type) {
+    switch (event.type) {
       case LINK:
-        window.open(clickEvent.url, "_blank");
+        window.open(event.url, "_blank");
         break;
       case POPUP:
         console.error("no");
         break;
     }
-    sendTracks(clickEvent.tracks);
+    sendTracks(event.tracks);
+  }
+  listen_ready(listener) {
+    this.once(READY, listener);
+  }
+  send_ready(src) {
+    this.emit(READY, src);
+  }
+  destroy() {
+    this.removeAllListeners();
+    this._observers.forEach(({ disconnect }) => {
+      disconnect();
+    });
   }
 }
+const LISTEN = "listen";
+const SEND = "send";
 class RippleDistributeInstance {
   constructor(id) {
     this.instance = new WebRipple(id);
   }
   send(name, event) {
-    var _a, _b;
-    (_b = (_a = this.instance)[name]) == null ? void 0 : _b.call(_a, event);
+    this.instance[`${SEND}_${name}`](event);
     return this;
   }
-  listen(name, listener, event) {
-    var _a, _b;
-    (_b = (_a = this.instance)[name]) == null ? void 0 : _b.call(_a, event, listener || noop);
+  listen(name, listener, options) {
+    this.instance[`${LISTEN}_${name}`](listener, options);
     return this;
+  }
+  destroy() {
+    this.instance.destroy();
   }
 }
 const initializeRipple = (id) => {
   return new RippleDistributeInstance(id);
-};
-const NCR = "__NCR__";
-const NCV = "__NCV__";
-const NCP = "__NCP__";
-const windowCustomReactive = (key) => {
-  const state = reactive({});
-  switch (key) {
-    case NCV:
-      window[NCV] = state;
-      break;
-    case NCR:
-      window[NCR] = state;
-      break;
-    case NCP:
-      window[NCP] = state;
-      break;
-  }
-  return state;
 };
 const pondEcho = windowCustomReactive(NCP);
 const rippleEcho = windowCustomReactive(NCR);
@@ -5872,6 +5949,11 @@ const initializeEcho = (data) => {
   if (!anchorScriptElement) {
     console.warn("nc: can't find element with id:", id);
     return;
+  }
+  const isScriptExistInBody = document.body.contains(anchorScriptElement);
+  if (!isScriptExistInBody) {
+    document.body.appendChild(anchorScriptElement);
+    console.warn("nc: element doesn't exist in body, move element into body automate:", id);
   }
   const viewComponent = document.createElement(NC_VIEW_ELEMENT);
   viewComponent.setAttribute(NC_ELEMENT_ATTR_ID, id);
@@ -5885,8 +5967,8 @@ const registerComponent = () => {
   const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
   if (hasDefined)
     return;
-  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./79cb9e15.js"), "/src/components/view/layout/Default.ce.vue": () => import("./d4084fa6.js"), "/src/components/view/layout/Template.ce.vue": () => import("./f0e7ad04.js"), "/src/components/view/type/Banner.ce.vue": () => import("./53af07af.js"), "/src/components/view/type/Chest.ce.vue": () => import("./b2570817.js"), "/src/components/view/type/Vast.ce.vue": () => import("./2c5b0645.js") };
-  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./fb176e80.js") };
+  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./edcfe7c2.js"), "/src/components/view/layout/Default.ce.vue": () => import("./e05e9809.js"), "/src/components/view/layout/Template.ce.vue": () => import("./c2782bd0.js"), "/src/components/view/type/Banner.ce.vue": () => import("./cd5b2fe5.js"), "/src/components/view/type/Chest.ce.vue": () => import("./53ccec30.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./af89f847.js"), "/src/components/view/type/Vast.ce.vue": () => import("./0e2b2fd1.js") };
+  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./d8c48f74.js") };
   const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
   Object.keys(components).forEach((key) => {
     var _a;
@@ -5912,4 +5994,4 @@ const initialize = (data) => {
     console.warn("nc: data is not a valid json");
   }
 };
-export { toDisplayString as A, registerComponent as B, CLICK as C, initialize as D, Fragment as F, INTERSECTIONS as I, LINK as L, NC_ELEMENT_PREFIX as N, TransitionGroup as T, createElementBlock as a, createBaseVNode as b, computed as c, defineComponent as d, createBlock as e, useCssVars as f, rippleEcho as g, createVNode as h, normalizeClass as i, NC_PICTURE_ELEMENT as j, ref as k, onMounted as l, onBeforeUnmount as m, normalizeStyle as n, openBlock as o, pondEcho as p, renderList as q, resolveDynamicComponent as r, events as s, reactive as t, unref as u, viewEcho as v, withCtx as w, withDirectives as x, vShow as y, createTextVNode as z };
+export { normalizeClass as A, NC_PICTURE_ELEMENT as B, CLICK as C, watchEffect as D, withCtx as E, Fragment as F, TransitionGroup as G, renderList as H, INTERSECTIONS as I, createCommentVNode as J, nextTick as K, LINK as L, events as M, NC_ELEMENT_PREFIX as N, withDirectives as O, POSITION as P, vShow as Q, READY as R, createTextVNode as S, Text as T, registerComponent as U, initialize as V, openBlock as a, createElementBlock as b, computed as c, defineComponent as d, createBaseVNode as e, createBlock as f, resolveDynamicComponent as g, normalizeStyle as h, useCssVars as i, rippleEcho as j, h as k, inject as l, onMounted as m, noop as n, onBeforeUnmount as o, pondEcho as p, onUnmounted as q, reactive as r, isRef as s, toDisplayString as t, unref as u, viewEcho as v, ref as w, getCurrentInstance as x, watch as y, createVNode as z };

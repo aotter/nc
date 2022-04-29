@@ -1,7 +1,4 @@
 // nc: 0.1.3
-import { d as defineComponent, k as ref, c as computed, l as onMounted, m as onBeforeUnmount, o as openBlock, a as createElementBlock, b as createBaseVNode, e as createBlock, u as unref, r as resolveDynamicComponent, j as NC_PICTURE_ELEMENT, h as createVNode, w as withCtx, T as TransitionGroup, n as normalizeStyle, f as useCssVars, F as Fragment, q as renderList, C as CLICK } from "./ae1324bf.js";
-import { u as useEcho } from "./19fb4cb0.js";
-import { _ as _export_sfc } from "./841cd136.js";
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -14,7 +11,7 @@ function _inheritsLoose(subClass, superClass) {
   subClass.__proto__ = superClass;
 }
 /*!
- * GSAP 3.10.3
+ * GSAP 3.10.4
  * https://greensock.com
  *
  * @license Copyright 2008-2022, GreenSock. All rights reserved.
@@ -2681,7 +2678,7 @@ var gsap = _gsap.registerPlugin({
     }
   }
 }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-Tween.version = Timeline.version = gsap.version = "3.10.3";
+Tween.version = Timeline.version = gsap.version = "3.10.4";
 _coreReady = 1;
 _windowExists$1() && _wake();
 _easeMap.Power0;
@@ -2703,7 +2700,7 @@ _easeMap.Sine;
 _easeMap.Expo;
 _easeMap.Circ;
 /*!
- * CSSPlugin 3.10.3
+ * CSSPlugin 3.10.4
  * https://greensock.com
  *
  * Copyright 2008-2022, GreenSock. All rights reserved.
@@ -3559,138 +3556,4 @@ _forEachName("x,y,z,top,right,bottom,left,width,height,fontSize,padding,margin,p
 gsap.registerPlugin(CSSPlugin);
 var gsapWithCSS = gsap.registerPlugin(CSSPlugin) || gsap;
 gsapWithCSS.core.Tween;
-var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.chest{position:relative;width:100%;height:100%;overflow:hidden}.chest__container{display:grid;grid-auto-flow:column;gap:var(--42bc6dbc);place-content:center;padding:2rem;position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%)}.chest__container .flip-move{transition:transform .5s ease-in-out}.chest__picture{position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%);height:auto}\n';
-const _hoisted_1 = { class: "chest__picture" };
-const _hoisted_2 = ["onClick"];
-const _sfc_main = /* @__PURE__ */ defineComponent({
-  props: {
-    ncId: {
-      type: String,
-      required: true
-    }
-  },
-  setup(__props) {
-    const props = __props;
-    useCssVars((_ctx) => ({
-      "42bc6dbc": unref(chestContainerLayoutGap)
-    }));
-    const activeItemKey = ref();
-    const intervalTween = ref();
-    const delayCallReset = ref();
-    const shuffleChestItems = ref([]);
-    const { property, ripple, styles } = useEcho(props.ncId);
-    const chestPicture = computed(() => property.value.chestPicture);
-    const chestItems = computed(() => property.value.chestItems);
-    const chestContainerSetting = computed(() => {
-      var _a;
-      return (_a = property.value.chestContainer) == null ? void 0 : _a.setting;
-    });
-    const chestContainerLayout = computed(() => {
-      var _a;
-      return (_a = chestContainerSetting.value) == null ? void 0 : _a.layout;
-    });
-    const chestContainerShuffle = computed(() => {
-      var _a;
-      return (_a = chestContainerSetting.value) == null ? void 0 : _a.shuffle;
-    });
-    const chestContainerLayoutGap = computed(() => {
-      var _a;
-      return ((_a = chestContainerLayout.value) == null ? void 0 : _a.gap) || "2rem";
-    });
-    const setChestShuffle = () => {
-      shuffleChestItems.value = gsapWithCSS.utils.shuffle(chestItems.value);
-    };
-    const startShuffle = () => {
-      var _a, _b;
-      if ((_a = chestContainerShuffle.value) == null ? void 0 : _a.interval) {
-        intervalTween.value = gsapWithCSS.set(setChestShuffle, {
-          onRepeat: setChestShuffle,
-          repeat: -1,
-          repeatDelay: ((_b = chestContainerShuffle.value) == null ? void 0 : _b.interval) / 1e3
-        });
-      }
-    };
-    onMounted(() => {
-      var _a, _b;
-      if (!chestContainerSetting.value)
-        return;
-      if ((_a = chestContainerShuffle.value) == null ? void 0 : _a.enabled) {
-        setChestShuffle();
-        if ((_b = chestContainerShuffle.value) == null ? void 0 : _b.interval) {
-          startShuffle();
-        }
-      }
-    });
-    const killTweens = () => {
-      if (delayCallReset.value) {
-        delayCallReset.value.kill();
-      }
-      if (intervalTween.value) {
-        intervalTween.value.kill();
-      }
-    };
-    onBeforeUnmount(() => {
-      killTweens();
-    });
-    const handleClickChestItem = (key, event) => {
-      var _a;
-      activeItemKey.value = key;
-      ripple.send(CLICK, event);
-      if (intervalTween.value) {
-        intervalTween.value.pause();
-      }
-      if (delayCallReset.value) {
-        (_a = delayCallReset.value) == null ? void 0 : _a.kill();
-      }
-      delayCallReset.value = gsapWithCSS.delayedCall(5, () => {
-        activeItemKey.value = void 0;
-        if (intervalTween.value) {
-          intervalTween.value.resume();
-        }
-      });
-    };
-    return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", {
-        class: "chest",
-        style: normalizeStyle(unref(styles).chest)
-      }, [
-        createBaseVNode("div", _hoisted_1, [
-          (openBlock(), createBlock(resolveDynamicComponent(unref(NC_PICTURE_ELEMENT)), {
-            ".sources": unref(chestPicture).sources,
-            ".src": unref(chestPicture).src,
-            ".styles": unref(chestPicture).styles
-          }, null, 8, [".sources", ".src", ".styles"]))
-        ]),
-        createVNode(TransitionGroup, {
-          tag: "div",
-          name: "flip",
-          class: "chest__container",
-          styles: unref(styles).chestContainer
-        }, {
-          default: withCtx(() => [
-            (openBlock(true), createElementBlock(Fragment, null, renderList(shuffleChestItems.value, ({
-              key,
-              activePicture,
-              inactivePicture,
-              event
-            }) => {
-              return openBlock(), createElementBlock("div", {
-                key,
-                onClick: () => handleClickChestItem(key, event.click)
-              }, [
-                (openBlock(), createBlock(resolveDynamicComponent(unref(NC_PICTURE_ELEMENT)), {
-                  ".sources": activeItemKey.value === key ? activePicture.sources : inactivePicture.sources,
-                  ".src": activeItemKey.value === key ? activePicture.src : inactivePicture.src,
-                  ".styles": unref(styles)
-                }, null, 8, [".sources", ".src", ".styles"]))
-              ], 8, _hoisted_2);
-            }), 128))
-          ]),
-          _: 1
-        }, 8, ["styles"])
-      ], 4);
-    };
-  }
-});
-var Chest_ce = /* @__PURE__ */ _export_sfc(_sfc_main, [["styles", [_style_0]]]);
-export { Chest_ce as default };
+export { gsapWithCSS as g };

@@ -1,2 +1,2 @@
-// nc: 0.1.3
-export { V as initialize, U as registerComponent } from "./e605d59c.js";
+// nc: 0.2.0
+export { V as initialize, U as registerComponent } from "./1c5a78e2.js";

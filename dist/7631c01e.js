@@ -1,5 +1,5 @@
-// nc: 0.1.3
-import { k as h, l as inject, m as onMounted, q as onUnmounted, s as isRef, w as ref, x as getCurrentInstance, c as computed, y as watch, F as Fragment, z as createVNode, T as Text } from "./e605d59c.js";
+// nc: 0.2.0
+import { k as h, l as inject, m as onMounted, q as onUnmounted, s as isRef, w as ref, x as getCurrentInstance, c as computed, y as watch, F as Fragment, z as createVNode, T as Text } from "./1c5a78e2.js";
 /*!
   * @intlify/shared v9.1.9
   * (c) 2021 kazuya kawaguchi

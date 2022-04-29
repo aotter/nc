@@ -1,4 +1,4 @@
-// nc: 0.1.3
+// nc: 0.2.0
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");

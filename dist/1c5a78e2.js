@@ -1,4 +1,4 @@
-// nc: 0.1.3
+// nc: 0.2.0
 var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -5967,8 +5967,8 @@ const registerComponent = () => {
   const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
   if (hasDefined)
     return;
-  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./edcfe7c2.js"), "/src/components/view/layout/Default.ce.vue": () => import("./e05e9809.js"), "/src/components/view/layout/Template.ce.vue": () => import("./c2782bd0.js"), "/src/components/view/type/Banner.ce.vue": () => import("./cd5b2fe5.js"), "/src/components/view/type/Chest.ce.vue": () => import("./53ccec30.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./af89f847.js"), "/src/components/view/type/Vast.ce.vue": () => import("./0e2b2fd1.js") };
-  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./d8c48f74.js") };
+  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./a6dd151f.js"), "/src/components/view/layout/Default.ce.vue": () => import("./8cdf64f8.js"), "/src/components/view/layout/Template.ce.vue": () => import("./bfafa324.js"), "/src/components/view/type/Banner.ce.vue": () => import("./19e0c8f6.js"), "/src/components/view/type/Chest.ce.vue": () => import("./33c742ca.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./c1cb6f32.js"), "/src/components/view/type/Vast.ce.vue": () => import("./9f35ab88.js") };
+  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./859e193e.js") };
   const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
   Object.keys(components).forEach((key) => {
     var _a;

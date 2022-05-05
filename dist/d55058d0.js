@@ -1,4 +1,4 @@
-// nc: 0.2.0
+// nc: 0.2.1
 var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
@@ -23,9 +23,10 @@ const NC_ELEMENT_PREFIX = `${NC_ELEMENT}-`;
 const NC_ELEMENT_ATTR_ID = `${NC_ELEMENT_PREFIX}id`;
 const NC_VIEW_ELEMENT = `${NC_ELEMENT}-view`;
 const NC_PICTURE_ELEMENT = `${NC_ELEMENT_PREFIX}picture`;
-const NCR = "__NCR__";
-const NCV = "__NCV__";
 const NCP = "__NCP__";
+const NCR = "__NCR__";
+const NCCG = "__NCCG__";
+const NCV = "__NCV__";
 function makeMap(str, expectsLowerCase) {
   const map = /* @__PURE__ */ Object.create(null);
   const list = str.split(",");
@@ -5348,7 +5349,7 @@ function ensureRenderer() {
 const render = (...args) => {
   ensureRenderer().render(...args);
 };
-const windowCustomReactive = (key) => {
+const windowReactiveProxy = (key) => {
   const state = reactive({});
   switch (key) {
     case NCV:
@@ -5359,6 +5360,9 @@ const windowCustomReactive = (key) => {
       break;
     case NCP:
       window[NCP] = state;
+      break;
+    case NCCG:
+      window[NCCG] = state;
       break;
   }
   return state;
@@ -5421,7 +5425,7 @@ class PondInstance {
     return this;
   }
 }
-const initializePond = (id) => {
+const initPond = (id) => {
   return new PondInstance(id);
 };
 const generateThresholds = () => {
@@ -5458,6 +5462,17 @@ const POPUP = "popup";
 const noop = () => {
 };
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const debounce = (fn, delay) => {
+  let timer;
+  return () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn();
+    }, delay);
+  };
+};
 var events = { exports: {} };
 var R = typeof Reflect === "object" ? Reflect : null;
 var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply2(target, receiver, args) {
@@ -5820,20 +5835,24 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
   }
 }
 class WebRipple extends events.exports.EventEmitter {
-  constructor(id) {
+  constructor(id, configs) {
+    var _a;
     super();
     this._observers = [];
     this.id = id;
-    this.element = document.querySelector(`[${NC_ELEMENT_ATTR_ID}="${id}"]`) || document.body;
+    const { root } = configs || {};
+    this.element = document.querySelector(`[${NC_ELEMENT_ATTR_ID}="${id}"]`);
+    const selectedRoot = typeof root === "string" ? root === "" ? void 0 : (_a = document.querySelector(root)) != null ? _a : void 0 : root;
+    this.root = selectedRoot;
   }
   listen_intersections(listener, options) {
     this.on(INTERSECTIONS, listener || noop);
+    const { element: defaultElement, root = null } = this;
     const {
       events: events2 = [],
-      element = this.element,
-      root = null,
       threshold = generateThresholds(),
-      rootMargin = "0px"
+      rootMargin = "0px",
+      element = defaultElement
     } = options != null ? options : {};
     const intersectionOptions = {
       root,
@@ -5855,11 +5874,13 @@ class WebRipple extends events.exports.EventEmitter {
       if (notEvent)
         return;
       const isEverySent = eventStatusMap.send.every((sent) => sent);
-      if (isEverySent)
+      if (isEverySent) {
+        observer.disconnect();
         return;
+      }
       events2.forEach((event, index) => {
-        const { setting, tracks } = event;
-        const { ratio, remain } = setting;
+        const { options: options2, tracks } = event;
+        const { ratio, remain } = options2;
         if (eventStatusMap.send[index])
           return;
         eventStatusMap.timer[index] && clearTimeout(eventStatusMap.timer[index]);
@@ -5877,22 +5898,23 @@ class WebRipple extends events.exports.EventEmitter {
     this._observers[currentObserverIndex].observe(element);
   }
   listen_position(listener, options) {
-    const { element = this.element, root = window } = options != null ? options : {};
+    const { element: defaultElement, root = window } = this;
+    const { element = defaultElement } = options != null ? options : {};
     this.on(POSITION, listener);
-    let timeout;
-    root == null ? void 0 : root.addEventListener("scroll", () => {
-      timeout && window.cancelAnimationFrame(timeout);
-      timeout = window.requestAnimationFrame(() => {
+    this.listen_intersections(({ isIntersecting }) => {
+      const listener2 = debounce(() => {
         const { top, height } = element.getBoundingClientRect();
         const rootHeight = root === window ? root.innerHeight : root.offsetHeight;
         const fraction = (top + height) / (rootHeight + height);
-        const inViewport = fraction >= 0 && fraction <= 1;
-        if (inViewport) {
-          const position = clamp(1 - fraction, 0, 1);
-          this.emit(POSITION, position);
-        }
-      });
-    }, { passive: true });
+        const position = clamp(1 - fraction, 0, 1);
+        this.emit(POSITION, position);
+      }, 10);
+      if (isIntersecting) {
+        root.addEventListener("scroll", listener2, { passive: true });
+      } else {
+        root.removeEventListener("scroll", listener2);
+      }
+    });
   }
   send_click(event) {
     this.emit(CLICK, event);
@@ -5922,8 +5944,8 @@ class WebRipple extends events.exports.EventEmitter {
 const LISTEN = "listen";
 const SEND = "send";
 class RippleDistributeInstance {
-  constructor(id) {
-    this.instance = new WebRipple(id);
+  constructor(id, configs) {
+    this.instance = new WebRipple(id, configs);
   }
   send(name, event) {
     this.instance[`${SEND}_${name}`](event);
@@ -5937,14 +5959,39 @@ class RippleDistributeInstance {
     this.instance.destroy();
   }
 }
-const initializeRipple = (id) => {
-  return new RippleDistributeInstance(id);
+const initRipple = (id, configs) => {
+  return new RippleDistributeInstance(id, configs);
 };
-const pondEcho = windowCustomReactive(NCP);
-const rippleEcho = windowCustomReactive(NCR);
-const viewEcho = windowCustomReactive(NCV);
-const initializeEcho = (data) => {
+const pondEcho = windowReactiveProxy(NCP);
+const rippleEcho = windowReactiveProxy(NCR);
+const viewEcho = windowReactiveProxy(NCV);
+const configsEcho = windowReactiveProxy(NCCG);
+const initEcho = (data) => {
   const { id } = data;
+  configsEcho.configs = window.__NCC__;
+  viewEcho[id] = data;
+  rippleEcho[id] = initRipple(id, configsEcho.configs);
+  (pondEcho[id] = initPond(id)).info(VIEW, "init").info(ECHO, "init").info(RIPPLE, "init");
+};
+const initComponents = () => {
+  const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
+  if (hasDefined)
+    return;
+  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./05f359af.js"), "/src/components/view/layout/Default.ce.vue": () => import("./abb00c72.js"), "/src/components/view/layout/Template.ce.vue": () => import("./8215e2f1.js"), "/src/components/view/type/Banner.ce.vue": () => import("./5212dbaf.js"), "/src/components/view/type/Chest.ce.vue": () => import("./72acd277.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./f163837b.js"), "/src/components/view/type/Vast.ce.vue": () => import("./6650d1b0.js") };
+  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./8c509d96.js") };
+  const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
+  Object.keys(components).forEach((key) => {
+    var _a;
+    const name = (_a = key.split("/").pop()) == null ? void 0 : _a.split(".")[0].toLowerCase();
+    if (!name) {
+      console.warn("nc: component file name is undefined");
+      return;
+    }
+    const asyncComponent = defineAsyncComponent(() => components[key]());
+    customElements.define(`${NC_ELEMENT_PREFIX}${name}`, defineCustomElement(asyncComponent));
+  });
+};
+const initElement = (id) => {
   const anchorScriptElement = document.querySelector(`[${NC_ELEMENT_ATTR_ID}="${id}"]`);
   if (!anchorScriptElement) {
     console.warn("nc: can't find element with id:", id);
@@ -5959,39 +6006,20 @@ const initializeEcho = (data) => {
   viewComponent.setAttribute(NC_ELEMENT_ATTR_ID, id);
   anchorScriptElement.insertAdjacentElement("afterend", viewComponent);
   anchorScriptElement.remove();
-  viewEcho[id] = data;
-  rippleEcho[id] = initializeRipple(id);
-  (pondEcho[id] = initializePond(id)).info(VIEW, "initialized").info(ECHO, "initialized").info(RIPPLE, "initialized");
 };
-const registerComponent = () => {
-  const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
-  if (hasDefined)
-    return;
-  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./a6dd151f.js"), "/src/components/view/layout/Default.ce.vue": () => import("./8cdf64f8.js"), "/src/components/view/layout/Template.ce.vue": () => import("./bfafa324.js"), "/src/components/view/type/Banner.ce.vue": () => import("./19e0c8f6.js"), "/src/components/view/type/Chest.ce.vue": () => import("./33c742ca.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./c1cb6f32.js"), "/src/components/view/type/Vast.ce.vue": () => import("./9f35ab88.js") };
-  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./859e193e.js") };
-  const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
-  Object.keys(components).forEach((key) => {
-    var _a;
-    const name = (_a = key.split("/").pop()) == null ? void 0 : _a.split(".")[0].toLowerCase();
-    if (!name) {
-      console.warn("nc: component file name is undefined");
-      return;
-    }
-    const asyncComponent = defineAsyncComponent(() => components[key]());
-    customElements.define(`${NC_ELEMENT_PREFIX}${name}`, defineCustomElement(asyncComponent));
-  });
-};
-const initialize = (data) => {
-  registerComponent();
+const init = (data) => {
+  initComponents();
   try {
-    const view = JSON.parse(data);
-    if (!view.id) {
+    const parsedData = JSON.parse(data);
+    const { id } = parsedData;
+    if (!id) {
       console.warn("nc: id is missing");
       return;
     }
-    initializeEcho(view);
-  } catch {
-    console.warn("nc: data is not a valid json");
+    initElement(id);
+    initEcho(parsedData);
+  } catch (e) {
+    console.warn("nc: data is not a valid json or something broke", e);
   }
 };
-export { normalizeClass as A, NC_PICTURE_ELEMENT as B, CLICK as C, watchEffect as D, withCtx as E, Fragment as F, TransitionGroup as G, renderList as H, INTERSECTIONS as I, createCommentVNode as J, nextTick as K, LINK as L, events as M, NC_ELEMENT_PREFIX as N, withDirectives as O, POSITION as P, vShow as Q, READY as R, createTextVNode as S, Text as T, registerComponent as U, initialize as V, openBlock as a, createElementBlock as b, computed as c, defineComponent as d, createBaseVNode as e, createBlock as f, resolveDynamicComponent as g, normalizeStyle as h, useCssVars as i, rippleEcho as j, h as k, inject as l, onMounted as m, noop as n, onBeforeUnmount as o, pondEcho as p, onUnmounted as q, reactive as r, isRef as s, toDisplayString as t, unref as u, viewEcho as v, ref as w, getCurrentInstance as x, watch as y, createVNode as z };
+export { normalizeClass as A, NC_PICTURE_ELEMENT as B, CLICK as C, watchEffect as D, withCtx as E, Fragment as F, TransitionGroup as G, renderList as H, INTERSECTIONS as I, createCommentVNode as J, nextTick as K, LINK as L, events as M, NC_ELEMENT_PREFIX as N, withDirectives as O, POSITION as P, vShow as Q, READY as R, createTextVNode as S, Text as T, initComponents as U, initElement as V, init as W, openBlock as a, createElementBlock as b, computed as c, defineComponent as d, createBaseVNode as e, createBlock as f, resolveDynamicComponent as g, normalizeStyle as h, useCssVars as i, rippleEcho as j, h as k, inject as l, onMounted as m, noop as n, onBeforeUnmount as o, pondEcho as p, onUnmounted as q, reactive as r, isRef as s, toDisplayString as t, unref as u, viewEcho as v, ref as w, getCurrentInstance as x, watch as y, createVNode as z };

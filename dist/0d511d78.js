@@ -1,8 +1,8 @@
-// nc: 0.2.0
-import { k as h, l as inject, m as onMounted, q as onUnmounted, s as isRef, w as ref, x as getCurrentInstance, c as computed, y as watch, F as Fragment, z as createVNode, T as Text } from "./1c5a78e2.js";
+// nc: 0.2.1
+import { k as h, l as inject, m as onMounted, q as onUnmounted, s as isRef, w as ref, x as getCurrentInstance, c as computed, y as watch, F as Fragment, z as createVNode, T as Text } from "./d55058d0.js";
 /*!
-  * @intlify/shared v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/shared v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 const hasSymbol = typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol";
@@ -45,8 +45,8 @@ const toDisplayString = (val) => {
   return val == null ? "" : isArray(val) || isPlainObject(val) && val.toString === objectToString ? JSON.stringify(val, null, 2) : String(val);
 };
 /*!
-  * @intlify/message-resolver v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/message-resolver v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -288,8 +288,8 @@ function handleFlatJson(obj) {
   return obj;
 }
 /*!
-  * @intlify/runtime v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/runtime v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 const DEFAULT_MODIFIER = (str) => str;
@@ -351,8 +351,8 @@ function createMessageContext(options = {}) {
   return ctx;
 }
 /*!
-  * @intlify/message-compiler v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/message-compiler v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 function createCompileError(code, loc, options = {}) {
@@ -367,8 +367,8 @@ function createCompileError(code, loc, options = {}) {
   return error;
 }
 /*!
-  * @intlify/devtools-if v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/devtools-if v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 const IntlifyDevToolsHooks = {
@@ -376,8 +376,8 @@ const IntlifyDevToolsHooks = {
   FunctionTranslate: "function:translate"
 };
 /*!
-  * @intlify/core-base v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * @intlify/core-base v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 let devtools = null;
@@ -396,7 +396,7 @@ const translateDevTools = /* @__PURE__ */ createDevToolsHook(IntlifyDevToolsHook
 function createDevToolsHook(hook) {
   return (payloads) => devtools && devtools.emit(hook, payloads);
 }
-const VERSION$1 = "9.1.9";
+const VERSION$1 = "9.1.10";
 const NOT_REOSLVED = -1;
 const MISSING_RESOLVE_VALUE = "";
 function getDefaultLinkedModifiers() {
@@ -884,11 +884,11 @@ function clearNumberFormat(ctx, locale, format) {
   }
 }
 /*!
-  * vue-i18n v9.1.9
-  * (c) 2021 kazuya kawaguchi
+  * vue-i18n v9.1.10
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
-const VERSION = "9.1.9";
+const VERSION = "9.1.10";
 function initFeatureFlags() {
   if (typeof __INTLIFY_PROD_DEVTOOLS__ !== "boolean") {
     getGlobalThis().__INTLIFY_PROD_DEVTOOLS__ = false;

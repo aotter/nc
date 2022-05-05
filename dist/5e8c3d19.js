@@ -1,4 +1,4 @@
-// nc: 0.2.0
+// nc: 0.2.1
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
 var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
@@ -18,21 +18,21 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-import { p as pondEcho, j as rippleEcho, c as computed, v as viewEcho } from "./1c5a78e2.js";
+import { p as pondEcho, j as rippleEcho, c as computed, v as viewEcho } from "./d55058d0.js";
 const useEcho = (id) => {
   const pond = pondEcho[id];
   const ripple = rippleEcho[id];
   const view = computed(() => viewEcho[id]);
-  const property = computed(() => view.value.property);
-  const styles = computed(() => Object.keys(property.value).reduce((result, current) => {
+  const properties = computed(() => view.value.properties);
+  const styles = computed(() => Object.keys(properties.value).reduce((result, current) => {
     var _a;
     return __spreadProps(__spreadValues({}, result), {
-      [current]: __spreadValues({}, (_a = view.value.property[current]) == null ? void 0 : _a.styles)
+      [current]: __spreadValues({}, (_a = view.value.properties[current]) == null ? void 0 : _a.styles)
     });
   }, {}));
   return {
     pond,
-    property,
+    properties,
     ripple,
     styles,
     view

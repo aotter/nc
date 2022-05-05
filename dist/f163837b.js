@@ -1,4 +1,4 @@
-// nc: 0.2.0
+// nc: 0.2.1
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
 var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
@@ -18,13 +18,12 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-import { d as defineComponent, r as reactive, c as computed, w as ref, P as POSITION, D as watchEffect, o as onBeforeUnmount, a as openBlock, b as createElementBlock, e as createBaseVNode, f as createBlock, u as unref, g as resolveDynamicComponent, B as NC_PICTURE_ELEMENT, h as normalizeStyle, F as Fragment, H as renderList, R as READY, J as createCommentVNode, t as toDisplayString, K as nextTick } from "./1c5a78e2.js";
+import { d as defineComponent, r as reactive, c as computed, w as ref, P as POSITION, D as watchEffect, o as onBeforeUnmount, a as openBlock, b as createElementBlock, e as createBaseVNode, f as createBlock, u as unref, g as resolveDynamicComponent, B as NC_PICTURE_ELEMENT, h as normalizeStyle, F as Fragment, H as renderList, R as READY, C as CLICK, J as createCommentVNode, t as toDisplayString, K as nextTick } from "./d55058d0.js";
 import { g as gsapWithCSS } from "./406a7049.js";
-import { u as useEcho } from "./025901b0.js";
+import { u as useEcho } from "./5e8c3d19.js";
 import { _ as _export_sfc } from "./841cd136.js";
 var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{color:initial;background-color:initial;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.parallax{height:100%}.parallax__layer{position:absolute;top:0;right:0;bottom:0;left:0;display:grid;place-content:center;width:100%;height:100%}.parallax__picture{display:grid;place-content:center;width:100%;height:100%}\n';
-const _hoisted_1 = { class: "parallax" };
-const _hoisted_2 = { key: 1 };
+const _hoisted_1 = { key: 1 };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   props: {
     ncId: {
@@ -34,22 +33,23 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const { ripple, property, styles } = useEcho(props.ncId);
+    const { ripple, properties, styles } = useEcho(props.ncId);
     const parallax = reactive({
-      layers: computed(() => property.value.parallaxLayers),
-      picture: computed(() => property.value.parallaxPicture)
+      layers: computed(() => properties.value.parallaxLayers),
+      picture: computed(() => properties.value.parallaxPicture),
+      root: computed(() => properties.value.parallax)
     });
-    const pictureRef = ref();
-    const layersRef = ref([]);
+    const pictureElement = ref();
+    const layersElements = ref([]);
     const combineAnimationElement = computed(() => {
       return [
         {
           animation: parallax.picture.animation,
-          element: pictureRef.value
+          element: pictureElement.value
         },
         ...parallax.layers.map((layer, index) => ({
           animation: layer.animation,
-          element: layersRef.value[index]
+          element: layersElements.value[index]
         }))
       ];
     });
@@ -66,8 +66,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     let timeline = initialTimeline();
     ripple.listen(POSITION, (progress) => {
       timeline.progress(progress);
-    }, {
-      root: document.getElementById("scroll-anchor")
     });
     const cleanupTween = () => {
       timeline.kill();
@@ -134,12 +132,19 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const handleLoad = (src) => {
       ripple.send(READY, src);
     };
+    const handleClickParallax = () => {
+      var _a;
+      ripple.send(CLICK, (_a = parallax.root) == null ? void 0 : _a.events.click);
+    };
     onBeforeUnmount(cleanupTween);
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1, [
+      return openBlock(), createElementBlock("div", {
+        class: "parallax",
+        onClick: handleClickParallax
+      }, [
         createBaseVNode("div", {
-          ref_key: "pictureRef",
-          ref: pictureRef,
+          ref_key: "pictureElement",
+          ref: pictureElement,
           class: "parallax__picture",
           style: normalizeStyle(unref(styles).parallaxPicture)
         }, [
@@ -160,7 +165,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               style: normalizeStyle(layer.styles),
               ref_for: true,
               ref: (ref2) => {
-                layersRef.value.push(ref2);
+                layersElements.value.push(ref2);
               }
             }, [
               layer.picture && !layer.text ? (openBlock(), createBlock(resolveDynamicComponent(unref(NC_PICTURE_ELEMENT)), {
@@ -168,7 +173,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                 ".sources": layer.picture.sources,
                 ".src": layer.picture.src
               }, null, 8, [".sources", ".src"])) : createCommentVNode("", true),
-              !layer.picture && layer.text ? (openBlock(), createElementBlock("span", _hoisted_2, toDisplayString(layer.text.content), 1)) : createCommentVNode("", true)
+              !layer.picture && layer.text ? (openBlock(), createElementBlock("span", _hoisted_1, toDisplayString(layer.text.content), 1)) : createCommentVNode("", true)
             ], 4);
           }), 128))
         ], 4)

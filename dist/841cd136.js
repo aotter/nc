@@ -1,4 +1,4 @@
-// nc: 0.2.0
+// nc: 0.2.1
 var _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {

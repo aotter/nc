@@ -1,6 +1,6 @@
-// nc: 0.2.0
-import { a as openBlock, b as createElementBlock, e as createBaseVNode, d as defineComponent, c as computed, z as createVNode, u as unref, A as normalizeClass, h as normalizeStyle, f as createBlock, g as resolveDynamicComponent, N as NC_ELEMENT_PREFIX, C as CLICK, L as LINK } from "./1c5a78e2.js";
-import { u as useEcho } from "./025901b0.js";
+// nc: 0.2.1
+import { a as openBlock, b as createElementBlock, e as createBaseVNode, d as defineComponent, c as computed, z as createVNode, u as unref, A as normalizeClass, h as normalizeStyle, f as createBlock, g as resolveDynamicComponent, N as NC_ELEMENT_PREFIX, C as CLICK, L as LINK } from "./d55058d0.js";
+import { u as useEcho } from "./5e8c3d19.js";
 import { _ as _export_sfc } from "./841cd136.js";
 const ASEAL_URL = "https://aseal.in/";
 const VAST = "vast";

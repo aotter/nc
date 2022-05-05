@@ -1,4 +1,4 @@
-// nc: 0.2.1
+// nc: 0.2.2
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
 var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
@@ -18,7 +18,7 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-import { p as pondEcho, j as rippleEcho, c as computed, v as viewEcho } from "./d55058d0.js";
+import { p as pondEcho, j as rippleEcho, c as computed, v as viewEcho } from "./1d4ee282.js";
 const useEcho = (id) => {
   const pond = pondEcho[id];
   const ripple = rippleEcho[id];

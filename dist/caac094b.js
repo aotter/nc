@@ -5372,7 +5372,7 @@ const INFO = "info";
 const LOG = "log";
 const WARN = "warn";
 const ECHO = "echo";
-const POPUP$1 = "popup";
+const POPUP = "popup";
 const RIPPLE = "ripple";
 const VIEW = "view";
 const PondColor = {
@@ -5383,7 +5383,7 @@ const PondColor = {
 };
 const PondScopeEmoji = {
   [ECHO]: "\u{1F4AC}",
-  [POPUP$1]: "\u{1F4A5}",
+  [POPUP]: "\u{1F4A5}",
   [RIPPLE]: "\u{1F4A6}",
   [VIEW]: "\u{1F4A1}"
 };
@@ -5428,22 +5428,13 @@ class PondInstance {
 const initPond = (id) => {
   return new PondInstance(id);
 };
-const generateThresholds = () => {
-  const thresholds = [];
-  for (let i = 0; i < 1.01; i += 0.01) {
-    thresholds.push(+i.toFixed(2));
-  }
-  return thresholds;
-};
 const IMAGE = "image";
 const sendImageTrack = (url) => {
   const image = new Image();
   image.onload = image.onerror = (arg) => arg;
   image.src = url;
 };
-const sendTracks = (tracks) => {
-  if (!(tracks == null ? void 0 : tracks.length))
-    return;
+const sendTracks = (tracks = []) => {
   tracks.forEach((track2) => {
     const { url, method } = track2;
     switch (method) {
@@ -5453,26 +5444,40 @@ const sendTracks = (tracks) => {
     }
   });
 };
+const impressionInvoker = (impressions = []) => {
+  const impressionsSentMap = new Array(impressions.length).fill(false);
+  const impressionsTimerMap = [];
+  const invoker = (currentRatio, onComplete) => {
+    if (!impressions.length) {
+      return;
+    }
+    const isEveryImpressionSent = impressionsSentMap.every((sent) => !!sent);
+    if (isEveryImpressionSent) {
+      onComplete == null ? void 0 : onComplete();
+      return;
+    }
+    impressions.forEach((impression, index) => {
+      if (impressionsSentMap[index]) {
+        return;
+      }
+      const { settings, tracks } = impression;
+      const { ratio, remain } = settings;
+      clearTimeout(impressionsTimerMap[index]);
+      if (currentRatio >= ratio) {
+        impressionsTimerMap[index] = setTimeout(() => {
+          impressionsSentMap[index] = true;
+          sendTracks(tracks);
+        }, remain);
+      }
+    });
+  };
+  return invoker;
+};
 const CLICK = "click";
 const INTERSECTIONS = "intersections";
 const POSITION = "position";
 const READY = "ready";
 const LINK = "link";
-const POPUP = "popup";
-const noop = () => {
-};
-const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-const debounce = (fn, delay) => {
-  let timer;
-  return () => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      fn();
-    }, delay);
-  };
-};
 var events = { exports: {} };
 var R = typeof Reflect === "object" ? Reflect : null;
 var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply2(target, receiver, args) {
@@ -5834,6 +5839,61 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
     throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
   }
 }
+class MobileRipple extends events.exports.EventEmitter {
+  constructor(id) {
+    super();
+    this.id = id;
+  }
+  listen_intersections(listener, options) {
+    const { events: impressions = [] } = options != null ? options : {};
+    const invoker = impressionInvoker(impressions);
+    const impressionListener = (payload) => {
+      const { intersectionRatio } = payload;
+      listener(payload);
+      invoker(intersectionRatio, () => {
+        this.removeListener(INTERSECTIONS, impressionListener);
+      });
+    };
+    this.on(INTERSECTIONS, impressionListener);
+  }
+  listen_position(listener) {
+    this.on(POSITION, listener);
+  }
+  listen_ready(listener) {
+    this.once(READY, listener);
+  }
+  send_click(event) {
+    sendTracks(event.tracks);
+    this.emit(CLICK, event);
+  }
+  send_ready(payload) {
+    this.emit(READY, payload);
+  }
+  destroy() {
+    this.removeAllListeners();
+  }
+}
+const noop = () => {
+};
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const debounce = (fn, delay) => {
+  let timer;
+  return () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn();
+    }, delay);
+  };
+};
+const generateThresholds = () => {
+  const thresholds = [];
+  for (let i = 0; i < 1.01; i += 0.01) {
+    thresholds.push(+i.toFixed(2));
+  }
+  return thresholds;
+};
 class WebRipple extends events.exports.EventEmitter {
   constructor(id, configs) {
     var _a;
@@ -5846,10 +5906,10 @@ class WebRipple extends events.exports.EventEmitter {
     this.root = selectedRoot;
   }
   listen_intersections(listener, options) {
-    this.on(INTERSECTIONS, listener || noop);
+    this.on(INTERSECTIONS, listener);
     const { element: defaultElement, root = null } = this;
     const {
-      events: events2 = [],
+      events: impressions = [],
       threshold = generateThresholds(),
       rootMargin = "0px",
       element = defaultElement
@@ -5859,11 +5919,7 @@ class WebRipple extends events.exports.EventEmitter {
       rootMargin,
       threshold
     };
-    const eventStatusMap = {
-      send: new Array(events2 == null ? void 0 : events2.length).fill(false),
-      timer: []
-    };
-    const notEvent = !events2.length;
+    const invoker = impressionInvoker(impressions);
     const observerCallback = ([
       { isIntersecting, intersectionRatio }
     ]) => {
@@ -5871,26 +5927,8 @@ class WebRipple extends events.exports.EventEmitter {
         intersectionRatio,
         isIntersecting
       });
-      if (notEvent)
-        return;
-      const isEverySent = eventStatusMap.send.every((sent) => sent);
-      if (isEverySent) {
+      invoker(intersectionRatio, () => {
         observer.disconnect();
-        return;
-      }
-      events2.forEach((event, index) => {
-        const { options: options2, tracks } = event;
-        const { ratio, remain } = options2;
-        if (eventStatusMap.send[index])
-          return;
-        eventStatusMap.timer[index] && clearTimeout(eventStatusMap.timer[index]);
-        if (intersectionRatio >= ratio) {
-          eventStatusMap.timer[index] = setTimeout(() => {
-            eventStatusMap.send[index] = true;
-            sendTracks(tracks);
-            this._observers[currentObserverIndex].disconnect();
-          }, remain);
-        }
       });
     };
     const observer = new IntersectionObserver(observerCallback, intersectionOptions);
@@ -5906,8 +5944,10 @@ class WebRipple extends events.exports.EventEmitter {
         const { top, height } = element.getBoundingClientRect();
         const rootHeight = root === window ? root.innerHeight : root.offsetHeight;
         const fraction = (top + height) / (rootHeight + height);
-        const position = clamp(1 - fraction, 0, 1);
-        this.emit(POSITION, position);
+        const positionRatio = clamp(1 - fraction, 0, 1);
+        this.emit(POSITION, {
+          positionRatio
+        });
       }, 10);
       if (isIntersecting) {
         root.addEventListener("scroll", listener2, { passive: true });
@@ -5916,23 +5956,20 @@ class WebRipple extends events.exports.EventEmitter {
       }
     });
   }
-  send_click(event) {
-    this.emit(CLICK, event);
-    switch (event.type) {
+  send_click(payload) {
+    this.emit(CLICK, payload);
+    switch (payload.type) {
       case LINK:
-        window.open(event.url, "_blank");
-        break;
-      case POPUP:
-        console.error("no");
+        window.open(payload.url, "_blank");
         break;
     }
-    sendTracks(event.tracks);
+    sendTracks(payload.tracks);
   }
   listen_ready(listener) {
     this.once(READY, listener);
   }
-  send_ready(src) {
-    this.emit(READY, src);
+  send_ready(payload) {
+    this.emit(READY, payload);
   }
   destroy() {
     this.removeAllListeners();
@@ -5944,11 +5981,11 @@ class WebRipple extends events.exports.EventEmitter {
 const LISTEN = "listen";
 const SEND = "send";
 class RippleDistributeInstance {
-  constructor(id, configs) {
-    this.instance = new WebRipple(id, configs);
+  constructor(id, platform, configs) {
+    this.instance = platform === "web" ? new WebRipple(id, configs) : new MobileRipple(id);
   }
-  send(name, event) {
-    this.instance[`${SEND}_${name}`](event);
+  send(name, payload) {
+    this.instance[`${SEND}_${name}`](payload);
     return this;
   }
   listen(name, listener, options) {
@@ -5959,26 +5996,26 @@ class RippleDistributeInstance {
     this.instance.destroy();
   }
 }
-const initRipple = (id, configs) => {
-  return new RippleDistributeInstance(id, configs);
+const initRipple = (id, platform, configs) => {
+  return new RippleDistributeInstance(id, platform, configs);
 };
 const pondEcho = windowReactiveProxy(NCP);
 const rippleEcho = windowReactiveProxy(NCR);
 const viewEcho = windowReactiveProxy(NCV);
 const configsEcho = windowReactiveProxy(NCCG);
 const initEcho = (data) => {
-  const { id } = data;
+  const { id, platform } = data;
   configsEcho.configs = window.__NCC__;
   viewEcho[id] = data;
-  rippleEcho[id] = initRipple(id, configsEcho.configs);
+  rippleEcho[id] = initRipple(id, platform, configsEcho.configs);
   (pondEcho[id] = initPond(id)).info(VIEW, "init").info(ECHO, "init").info(RIPPLE, "init");
 };
 const initComponents = () => {
   const hasDefined = window.customElements.get(NC_VIEW_ELEMENT);
   if (hasDefined)
     return;
-  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./9d2f7275.js"), "/src/components/view/layout/Default.ce.vue": () => import("./fd678972.js"), "/src/components/view/layout/Template.ce.vue": () => import("./261be868.js"), "/src/components/view/type/Banner.ce.vue": () => import("./e186726c.js"), "/src/components/view/type/Chest.ce.vue": () => import("./ca407658.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./d3e421b5.js"), "/src/components/view/type/Vast.ce.vue": () => import("./57581046.js") };
-  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./cbc5ea98.js") };
+  const viewComponents = { "/src/components/view/View.ce.vue": () => import("./ac41d758.js"), "/src/components/view/layout/Default.ce.vue": () => import("./f31884d0.js"), "/src/components/view/layout/Template.ce.vue": () => import("./4df325e1.js"), "/src/components/view/type/Banner.ce.vue": () => import("./d8aaa52c.js"), "/src/components/view/type/Chest.ce.vue": () => import("./5f7d48d3.js"), "/src/components/view/type/Parallax.ce.vue": () => import("./05662110.js"), "/src/components/view/type/Scratch.ce.vue": () => import("./6126ba2c.js"), "/src/components/view/type/Vast.ce.vue": () => import("./1aa8a2c4.js") };
+  const sharedComponents = { "/src/components/shared/Picture.ce.vue": () => import("./11b8073e.js") };
   const components = __spreadValues(__spreadValues({}, viewComponents), sharedComponents);
   Object.keys(components).forEach((key) => {
     var _a;

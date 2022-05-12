@@ -5,14 +5,13 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import { a as openBlock, b as createElementBlock, e as createBaseVNode, M as events, d as defineComponent, w as ref, r as reactive, c as computed, D as watchEffect, o as onBeforeUnmount, h as normalizeStyle, u as unref, O as withDirectives, Q as vShow, S as createTextVNode, t as toDisplayString, f as createBlock, g as resolveDynamicComponent, I as INTERSECTIONS, R as READY } from "./1d4ee282.js";
-import { u as useEcho } from "./ece4d06b.js";
-import { u as useI18n } from "./c21b6a7a.js";
+import { a as openBlock, b as createElementBlock, e as createBaseVNode, M as events, d as defineComponent, w as ref, r as reactive, c as computed, D as watchEffect, o as onBeforeUnmount, h as normalizeStyle, u as unref, O as withDirectives, Q as vShow, S as createTextVNode, t as toDisplayString, f as createBlock, g as resolveDynamicComponent, I as INTERSECTIONS, R as READY } from "./caac094b.js";
+import { u as useEcho } from "./47f77b24.js";
+import { u as useI18n } from "./dc66880a.js";
 import { _ as _export_sfc } from "./841cd136.js";
 const _hoisted_1$1 = {
-  width: "24",
-  height: "24",
   "stroke-width": "1.5",
+  viewBox: "0 0 24 24",
   fill: "none",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -35,9 +34,8 @@ function render$1(_ctx, _cache) {
 }
 var SoundHigh = { render: render$1 };
 const _hoisted_1 = {
-  width: "24",
-  height: "24",
   "stroke-width": "1.5",
+  viewBox: "0 0 24 24",
   fill: "none",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -211,7 +209,7 @@ class IMAPlayer extends IMA {
     cancelAnimationFrame(this._animationFrame);
   }
 }
-var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{color:initial;background-color:initial;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.vast__ima{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}.vast__ima>div{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__ima iframe{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__remaining-text{position:absolute;bottom:0;left:0;margin:1rem;font-size:.8rem;color:#fff;pointer-events:none;mix-blend-mode:difference}.vast__volume-button{position:absolute;right:0;bottom:0;width:1.375rem;height:1.375rem;margin:1rem;font-size:.8rem;color:#fff;mix-blend-mode:difference}\n';
+var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{color:initial;background-color:initial;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.vast__ima{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}.vast__ima>div{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__ima iframe{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__remaining-text{position:absolute;bottom:0;left:0;margin:1.625rem;font-size:.875rem;color:#fff;pointer-events:none;mix-blend-mode:difference}.vast__volume-button{position:absolute;right:0;bottom:0;width:1.875rem;height:1.875rem;margin:1.625rem;color:#fff;mix-blend-mode:difference}\n';
 const _sfc_main = /* @__PURE__ */ defineComponent({
   props: {
     ncId: {

@@ -1,5 +1,5 @@
-// nc: 0.2.3
-import { k as h, l as inject, m as onMounted, q as onUnmounted, s as isRef, w as ref, x as getCurrentInstance, c as computed, y as watch, F as Fragment, z as createVNode, T as Text } from "./e271f0b0.js";
+// nc: 0.3.0
+import { i as h, j as inject, k as onMounted, o as onUnmounted, l as isRef, m as ref, p as getCurrentInstance, c as computed, w as watch, F as Fragment, f as createVNode, T as Text } from "./9ac4870b.js";
 /*!
   * @intlify/shared v9.1.10
   * (c) 2022 kazuya kawaguchi
@@ -1703,15 +1703,27 @@ if (__INTLIFY_PROD_DEVTOOLS__) {
   setDevToolsHook(target.__INTLIFY_DEVTOOLS_GLOBAL_HOOK__);
 }
 var en = {
+  "advertisement": (ctx) => {
+    const { normalize: _normalize } = ctx;
+    return _normalize(["Advertisement"]);
+  },
   "ad": (ctx) => {
     const { normalize: _normalize } = ctx;
     return _normalize(["Ad"]);
+  },
+  "sponsor": (ctx) => {
+    const { normalize: _normalize } = ctx;
+    return _normalize(["Sponsor"]);
   }
 };
 var zh = {
   "ad": (ctx) => {
     const { normalize: _normalize } = ctx;
     return _normalize(["\u5EE3\u544A"]);
+  },
+  "sponsor": (ctx) => {
+    const { normalize: _normalize } = ctx;
+    return _normalize(["\u8D0A\u52A9"]);
   }
 };
 const getBrowserLocale = () => {

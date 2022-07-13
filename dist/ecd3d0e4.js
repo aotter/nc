@@ -1,14 +1,16 @@
-// nc: 0.2.3
+// nc: 0.3.0
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import { a as openBlock, b as createElementBlock, e as createBaseVNode, M as events, d as defineComponent, w as ref, r as reactive, c as computed, D as watchEffect, o as onBeforeUnmount, h as normalizeStyle, u as unref, O as withDirectives, Q as vShow, S as createTextVNode, t as toDisplayString, f as createBlock, g as resolveDynamicComponent, I as INTERSECTIONS, R as READY } from "./e271f0b0.js";
-import { u as useEcho } from "./c390ef47.js";
-import { u as useI18n } from "./30520cdb.js";
+import { a as openBlock, b as createElementBlock, e as createBaseVNode, H as events, d as defineComponent, m as ref, y as reactive, c as computed, B as watchEffect, o as onUnmounted, n as normalizeStyle, u as unref, J as withDirectives, K as vShow, L as createTextVNode, t as toDisplayString, g as createBlock, r as resolveDynamicComponent, h as useCssVars, I as INTERSECTION, R as READY } from "./9ac4870b.js";
+import { u as useI18n } from "./af843f4b.js";
+import { u as useRipple } from "./a21008ac.js";
+import { u as useType } from "./467698d9.js";
 import { _ as _export_sfc } from "./841cd136.js";
+import "./169febe6.js";
 const _hoisted_1$1 = {
   "stroke-width": "1.5",
   viewBox: "0 0 24 24",
@@ -209,8 +211,9 @@ class IMAPlayer extends IMA {
     cancelAnimationFrame(this._animationFrame);
   }
 }
-var _style_0 = '/*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid}:host{color:initial;background-color:initial;line-height:1.15;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}:focus{outline:none}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}.vast__ima{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}.vast__ima>div{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__ima iframe{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.vast__remaining-text{position:absolute;bottom:0;left:0;margin:1.625rem;font-size:.875rem;color:#fff;pointer-events:none;mix-blend-mode:difference}.vast__volume-button{position:absolute;right:0;bottom:0;width:1.875rem;height:1.875rem;margin:1.625rem;color:#fff;mix-blend-mode:difference}\n';
+var _style_0 = '*:where(:not(html,iframe,canvas,img,svg,video):not(svg *,symbol *)){all:unset;display:revert}*,*:before,*:after{box-sizing:border-box}a,button{cursor:revert}ol,ul,menu{list-style:none}img{max-width:100%}table{border-collapse:collapse}input,textarea{-webkit-user-select:auto;-moz-user-select:auto;user-select:auto}textarea{white-space:revert}meter{-webkit-appearance:revert;-moz-appearance:revert;appearance:revert}::-moz-placeholder{color:unset}::placeholder{color:unset}:where([hidden]){display:none}:where([contenteditable]:not([contenteditable=false])){-moz-user-modify:read-write;-webkit-user-modify:read-write;overflow-wrap:break-word;-webkit-line-break:after-white-space;-webkit-user-select:auto;-moz-user-select:auto;user-select:auto}:where([draggable=true]){-webkit-user-drag:element}button:where([type=button]),*:where([role=link],[role=button]){cursor:pointer}.root{aspect-ratio:var(--5a8bb146)/var(--5a8bb108);display:grid;grid-template-rows:repeat(var(--0985063c),1fr);grid-template-columns:repeat(var(--982d1ed4),1fr);gap:var(--166043c2)}@supports not (aspect-ratio: auto){.root :before{float:left;padding-top:calc(var(--5a8bb146) / var(--5a8bb108) * 100%);content:""}.root :after{display:block;clear:both;content:""}}.player{grid-row:var(--575c933b)/calc(var(--575c933b) + var(--100d9006) + 1);grid-column:var(--227657fa)/calc(var(--227657fa) + var(--dfcfe9c4) + 1);position:relative}.player>div{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.player iframe{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important}.remaining{grid-row:var(--d7945756)/calc(var(--d7945756) + var(--9529ba54) + 1);grid-column:var(--227657fa)/calc(var(--227657fa) + var(--fef630d6) + 1);display:grid;grid-template-columns:-webkit-max-content;grid-template-columns:max-content;grid-auto-flow:column;gap:.25rem;align-self:center;justify-self:center;font-size:.875rem;color:#fff;mix-blend-mode:difference}.volume{grid-row:var(--d7945756)/calc(var(--d7945756) + var(--9529ba54) + 1);grid-column:var(--2c54a777)/calc(var(--2c54a777) + var(--fef630d6) + 1);display:grid;align-self:center;justify-self:center;width:24pt;height:24pt;color:#fff;mix-blend-mode:difference}\n';
 const _sfc_main = /* @__PURE__ */ defineComponent({
+  __name: "Vast.ce",
   props: {
     ncId: {
       required: true,
@@ -219,98 +222,121 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const imaElement = ref();
+    useCssVars((_ctx) => {
+      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A, _B, _C, _D;
+      return {
+        "5a8bb146": unref(type).dimension[0],
+        "5a8bb108": unref(type).dimension[1],
+        "0985063c": ((_b = (_a = unref(properties).root) == null ? void 0 : _a.grid) == null ? void 0 : _b.rows) || 12,
+        "982d1ed4": ((_d = (_c = unref(properties).root) == null ? void 0 : _c.grid) == null ? void 0 : _d.columns) || 12,
+        "166043c2": ((_f = (_e = unref(properties).root) == null ? void 0 : _e.grid) == null ? void 0 : _f.gap) || 0,
+        "227657fa": ((_i = (_h = (_g = unref(properties).player) == null ? void 0 : _g.position) == null ? void 0 : _h.coordinate) == null ? void 0 : _i[0]) || 1,
+        "575c933b": ((_l = (_k = (_j = unref(properties).player) == null ? void 0 : _j.position) == null ? void 0 : _k.coordinate) == null ? void 0 : _l[1]) || 1,
+        "dfcfe9c4": ((_o = (_n = (_m = unref(properties).player) == null ? void 0 : _m.position) == null ? void 0 : _n.dimension) == null ? void 0 : _o[0]) || 12,
+        "100d9006": ((_r = (_q = (_p = unref(properties).player) == null ? void 0 : _p.position) == null ? void 0 : _q.dimension) == null ? void 0 : _r[1]) || 12,
+        "d7945756": ((_u = (_t = (_s = unref(properties).player) == null ? void 0 : _s.position) == null ? void 0 : _t.coordinate) == null ? void 0 : _u[1]) || 10,
+        "fef630d6": ((_x = (_w = (_v = unref(properties).player) == null ? void 0 : _v.position) == null ? void 0 : _w.dimension) == null ? void 0 : _x[0]) || 2,
+        "9529ba54": ((_A = (_z = (_y = unref(properties).player) == null ? void 0 : _y.position) == null ? void 0 : _z.dimension) == null ? void 0 : _A[1]) || 2,
+        "2c54a777": ((_D = (_C = (_B = unref(properties).player) == null ? void 0 : _B.position) == null ? void 0 : _C.coordinate) == null ? void 0 : _D[0]) || 11
+      };
+    });
+    const rootElement = ref();
+    const playerElement = ref();
     const formattedRemaining = ref("");
-    let imaPlayer = null;
+    let imaPlayer = void 0;
     const status = reactive({
       isInitialized: false,
       isMute: true
     });
     const { t } = useI18n();
-    const { properties, styles, ripple } = useEcho(props.ncId);
-    const chest = reactive({
-      remainingText: computed(() => properties.value.vastRemainingText),
-      root: computed(() => properties.value.vast)
+    const { ripple } = useRipple(props.ncId);
+    const { type, properties } = useType(props.ncId);
+    const vast = reactive({
+      remaining: computed(() => properties.value.remaining),
+      root: computed(() => properties.value.root),
+      rootSettings: computed(() => properties.value.root.settings)
     });
-    const remainingPrefix = computed(() => {
-      var _a;
-      return ((_a = chest.remainingText) == null ? void 0 : _a.content) || t("ad");
-    });
-    watchEffect((cleanup) => {
-      const element = imaElement.value;
-      if (!element)
+    const remainingPrefix = computed(() => vast.remaining || t("ad"));
+    const handleCleanup = () => {
+      imaPlayer == null ? void 0 : imaPlayer.destroy();
+    };
+    watchEffect((onCleanup) => {
+      if (!playerElement.value)
         return;
-      const player = imaPlayer = new IMAPlayer();
-      player.setConfig({
-        element,
-        url: chest.root.url,
-        xml: chest.root.xml
+      imaPlayer = new IMAPlayer();
+      imaPlayer.setConfig({
+        element: playerElement.value,
+        url: vast.rootSettings.url,
+        xml: vast.rootSettings.xml
       });
-      player.once("init", () => {
+      imaPlayer.once("init", () => {
         status.isMute = true;
         status.isInitialized = true;
-        ripple.listen(INTERSECTIONS, (entry) => {
+        ripple.listen(INTERSECTION, (entry) => {
           if (entry.isIntersecting) {
-            player.play();
+            imaPlayer == null ? void 0 : imaPlayer.play();
           } else {
-            player.pause();
+            imaPlayer == null ? void 0 : imaPlayer.pause();
           }
+        }, {
+          element: rootElement.value
         });
-        ripple.send(READY);
+        ripple.send(READY, {});
       });
-      player.on("remaining", (remaining) => {
+      imaPlayer.on("remaining", (remaining) => {
         formattedRemaining.value = new Date(remaining * 1e3).toISOString().slice(14, 19);
       });
-      player.on("restart", () => {
+      imaPlayer.on("restart", () => {
         status.isMute = true;
       });
-      player.on("mute", () => {
+      imaPlayer.on("mute", () => {
         status.isMute = true;
       });
-      player.on("unmute", () => {
+      imaPlayer.on("unmute", () => {
         status.isMute = false;
       });
-      cleanup(() => {
-        player.destroy();
+      onCleanup(() => {
+        handleCleanup();
       });
     });
     const handleToggleMute = () => {
       const { isMute } = status;
       isMute ? imaPlayer == null ? void 0 : imaPlayer.unmute() : imaPlayer == null ? void 0 : imaPlayer.mute();
     };
-    onBeforeUnmount(() => {
-      imaPlayer == null ? void 0 : imaPlayer.destroy();
+    onUnmounted(() => {
+      handleCleanup();
     });
     return (_ctx, _cache) => {
+      var _a, _b;
       return openBlock(), createElementBlock("div", {
-        class: "vast",
-        style: normalizeStyle(unref(styles).vast)
+        class: "root",
+        ref_key: "rootElement",
+        ref: rootElement,
+        style: normalizeStyle(unref(properties).root.style)
       }, [
         createBaseVNode("div", {
-          ref_key: "imaElement",
-          ref: imaElement,
+          ref_key: "playerElement",
+          ref: playerElement,
           role: "link",
-          class: "vast__ima",
-          style: normalizeStyle(unref(styles).vastIma)
+          class: "player",
+          style: normalizeStyle((_a = unref(properties).player) == null ? void 0 : _a.style)
         }, null, 4),
-        withDirectives(createBaseVNode("span", {
-          class: "vast__remaining-text",
-          style: normalizeStyle(unref(styles).vastRemainingText)
+        withDirectives(createBaseVNode("p", {
+          class: "remaining",
+          style: normalizeStyle((_b = unref(properties).remaining) == null ? void 0 : _b.style)
         }, [
           createTextVNode(toDisplayString(unref(remainingPrefix)) + " ", 1),
           createBaseVNode("time", null, "(" + toDisplayString(formattedRemaining.value) + ")", 1)
         ], 4), [
-          [vShow, unref(status).isInitialized]
+          [vShow, status.isInitialized]
         ]),
-        withDirectives(createBaseVNode("button", {
-          type: "button",
-          class: "vast__volume-button",
-          onClick: handleToggleMute,
-          style: normalizeStyle(unref(styles).vastVolumeButton)
-        }, [
-          (openBlock(), createBlock(resolveDynamicComponent(unref(status).isMute ? unref(SoundOff) : unref(SoundHigh))))
-        ], 4), [
-          [vShow, unref(status).isInitialized]
+        withDirectives((openBlock(), createBlock(resolveDynamicComponent(status.isMute ? unref(SoundOff) : unref(SoundHigh)), {
+          role: "button",
+          class: "volume",
+          style: normalizeStyle(unref(properties).volume),
+          onClick: handleToggleMute
+        }, null, 8, ["style"])), [
+          [vShow, status.isInitialized]
         ])
       ], 4);
     };

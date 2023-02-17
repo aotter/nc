@@ -1,1 +1,0 @@
-import{a}from"./78b8fe3e.js";import{C as e,I as t}from"./1236a3b0.js";import{o as i,I as m}from"./0381570b.js";import{u as n}from"./154cbf94.js";const f=s=>{const{bridge:o}=a();return{handleClick:r=>{r instanceof Event?o.emit(e,s):o.emit(e,r)}}},p=s=>{const o=n(),{bridge:r}=a();i(()=>{r.on(t,m,{impressions:s,target:o.value})})};export{f as a,p as u};

@@ -1,0 +1,2 @@
+import{d as e,g as a,q as s,u as i,x as p}from"./0fa97106.js";import{L as f}from"./b3f59732.js";import{_ as l}from"./66dda505.js";const d=e({__name:"Logo.ce",props:{height:{default:"16pt",type:String},width:{default:"16pt",type:String}},setup(o){const t=o;return p(r=>({"1430ef23":t.width,"581dfb6a":t.height})),(r,g)=>(a(),s(i(f),{class:"root",role:"link",title:"Aseal"}))}}),h=`.root{width:var(--1430ef23);height:var(--581dfb6a);cursor:pointer}
+`,n=l(d,[["styles",[h]]]);export{n as default};

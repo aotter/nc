@@ -1,1 +1,0 @@
-import{a as l,c as n}from"./6c555e4a.js";import{R as r}from"./9837cbe8.js";const s=(o={})=>{const{view:{color:t=""}}=l(),{bridge:e}=n();return{handleMediaReady:a=>{const c=a.target;e("emit",r,o,{color:t,extractColorElement:c})},handleReady:()=>{e("emit",r,o,{color:t})}}};export{s as u};
